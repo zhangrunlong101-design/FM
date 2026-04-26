@@ -3,13 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My FM Radio</title>
+  <title>Shared FM Radio</title>
   <style>
     * { box-sizing: border-box; }
     :root {
       --bg: #08090d;
-      --card: rgba(255,255,255,.08);
-      --card2: rgba(255,255,255,.12);
       --text: #f4f4f5;
       --muted: rgba(244,244,245,.62);
       --line: rgba(255,255,255,.14);
@@ -35,19 +33,10 @@
       opacity: .48;
       z-index: -3;
     }
-    .vignette {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at center, rgba(0,0,0,.1), rgba(0,0,0,.88));
-      z-index: -2;
-    }
+    .vignette { position: fixed; inset: 0; background: radial-gradient(circle at center, rgba(0,0,0,.1), rgba(0,0,0,.88)); z-index: -2; }
     .noise {
-      position: fixed;
-      inset: 0;
-      opacity: .08;
-      pointer-events: none;
+      position: fixed; inset: 0; opacity: .08; pointer-events: none; z-index: -1;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      z-index: -1;
     }
     .wrap {
       width: min(1180px, calc(100% - 28px));
@@ -69,41 +58,12 @@
       backdrop-filter: blur(22px);
       box-shadow: var(--shadow);
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-    .avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1px solid rgba(255,255,255,.28);
-      background: rgba(255,255,255,.1);
-    }
-    .brand h1 {
-      margin: 0;
-      font-size: 18px;
-      line-height: 1.1;
-      letter-spacing: -.02em;
-    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .avatar { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.1); }
+    .brand h1 { margin: 0; font-size: 18px; line-height: 1.1; letter-spacing: -.02em; }
     .brand p, .status p { margin: 0; color: var(--muted); font-size: 12px; }
-    .status {
-      text-align: right;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .live-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #ff4d6d;
-      box-shadow: 0 0 18px #ff4d6d;
-      animation: pulse 1.4s infinite ease-in-out;
-    }
+    .status { text-align: right; display: flex; align-items: center; gap: 10px; }
+    .live-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff4d6d; box-shadow: 0 0 18px #ff4d6d; animation: pulse 1.4s infinite ease-in-out; }
     @keyframes pulse { 50% { transform: scale(1.45); opacity: .55; } }
     .radio-card, .panel {
       min-height: 720px;
@@ -113,395 +73,137 @@
       backdrop-filter: blur(24px);
       box-shadow: var(--shadow);
     }
-    .radio-card {
-      padding: 28px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .speaker {
-      text-align: center;
-      padding-top: 30px;
-    }
-    .speaker-label {
-      color: var(--muted);
-      letter-spacing: .34em;
-      text-transform: uppercase;
-      font-size: 11px;
-      margin-bottom: 20px;
-    }
-    .disc-wrap {
-      position: relative;
-      width: min(360px, 80vw);
-      height: min(360px, 80vw);
-      margin: 0 auto 28px;
-      display: grid;
-      place-items: center;
-    }
-    .halo {
-      position: absolute;
-      inset: 12px;
-      border-radius: 50%;
-      background: conic-gradient(from 120deg, rgba(255,255,255,.2), transparent, rgba(255,255,255,.14), transparent, rgba(255,255,255,.2));
-      filter: blur(4px);
-      opacity: .8;
-    }
-    .disc {
-      position: relative;
-      width: 92%;
-      height: 92%;
-      border-radius: 50%;
-      overflow: hidden;
-      background: #18181b;
-      border: 1px solid rgba(255,255,255,.25);
-      box-shadow: inset 0 0 0 18px rgba(0,0,0,.24), 0 30px 70px rgba(0,0,0,.5);
-    }
+    .radio-card { padding: 28px; display: flex; flex-direction: column; justify-content: space-between; }
+    .speaker { text-align: center; padding-top: 30px; }
+    .speaker-label { color: var(--muted); letter-spacing: .34em; text-transform: uppercase; font-size: 11px; margin-bottom: 20px; }
+    .disc-wrap { position: relative; width: min(360px, 80vw); height: min(360px, 80vw); margin: 0 auto 28px; display: grid; place-items: center; }
+    .halo { position: absolute; inset: 12px; border-radius: 50%; background: conic-gradient(from 120deg, rgba(255,255,255,.2), transparent, rgba(255,255,255,.14), transparent, rgba(255,255,255,.2)); filter: blur(4px); opacity: .8; }
+    .disc { position: relative; width: 92%; height: 92%; border-radius: 50%; overflow: hidden; background: #18181b; border: 1px solid rgba(255,255,255,.25); box-shadow: inset 0 0 0 18px rgba(0,0,0,.24), 0 30px 70px rgba(0,0,0,.5); }
     .disc.playing { animation: spin 16s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .disc img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: .9;
-    }
-    .disc::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: repeating-radial-gradient(circle, rgba(255,255,255,.08) 0 1px, transparent 1px 8px);
-      mix-blend-mode: overlay;
-    }
-    .disc::after {
-      content: "";
-      position: absolute;
-      width: 92px;
-      height: 92px;
-      border-radius: 50%;
-      background: rgba(7,7,10,.84);
-      border: 1px solid rgba(255,255,255,.18);
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 0 12px rgba(255,255,255,.06);
-    }
-    .track-title {
-      font-size: clamp(38px, 7vw, 74px);
-      line-height: .92;
-      letter-spacing: -.07em;
-      margin: 0;
-      text-wrap: balance;
-    }
-    .track-artist {
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: 18px;
-    }
-    .voice-row {
-      margin: 22px auto 0;
-      display: inline-flex;
-      gap: 10px;
-      align-items: center;
-      color: rgba(255,255,255,.75);
-      font-size: 13px;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 999px;
-      padding: 8px 12px;
-      background: rgba(0,0,0,.18);
-    }
-    .controls {
-      padding-top: 28px;
-    }
-    .progress {
-      width: 100%;
-      height: 6px;
-      border-radius: 99px;
-      background: rgba(255,255,255,.14);
-      overflow: hidden;
-      cursor: pointer;
-      margin-bottom: 16px;
-    }
+    .disc img { width: 100%; height: 100%; object-fit: cover; opacity: .9; }
+    .disc::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: repeating-radial-gradient(circle, rgba(255,255,255,.08) 0 1px, transparent 1px 8px); mix-blend-mode: overlay; }
+    .disc::after { content: ""; position: absolute; width: 92px; height: 92px; border-radius: 50%; background: rgba(7,7,10,.84); border: 1px solid rgba(255,255,255,.18); left: 50%; top: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 0 12px rgba(255,255,255,.06); }
+    .track-title { font-size: clamp(38px, 7vw, 74px); line-height: .92; letter-spacing: -.07em; margin: 0; text-wrap: balance; }
+    .track-artist { margin: 14px 0 0; color: var(--muted); font-size: 18px; }
+    .voice-row { margin: 22px auto 0; display: inline-flex; gap: 10px; align-items: center; color: rgba(255,255,255,.75); font-size: 13px; border: 1px solid rgba(255,255,255,.12); border-radius: 999px; padding: 8px 12px; background: rgba(0,0,0,.18); }
+    .controls { padding-top: 28px; }
+    .progress { width: 100%; height: 6px; border-radius: 99px; background: rgba(255,255,255,.14); overflow: hidden; cursor: pointer; margin-bottom: 16px; }
     .bar { height: 100%; width: 0%; background: var(--accent); border-radius: inherit; }
-    .time {
-      display: flex;
-      justify-content: space-between;
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 20px;
-    }
-    .buttons {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 14px;
-    }
-    button {
-      border: 0;
-      color: var(--text);
-      cursor: pointer;
-      font: inherit;
-    }
-    .btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.11);
-      border: 1px solid rgba(255,255,255,.12);
-      display: grid;
-      place-items: center;
-      transition: .2s ease;
-    }
+    .time { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; margin-bottom: 20px; }
+    .buttons { display: flex; justify-content: center; align-items: center; gap: 14px; flex-wrap: wrap; }
+    button { border: 0; color: var(--text); cursor: pointer; font: inherit; }
+    .btn { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,.11); border: 1px solid rgba(255,255,255,.12); display: grid; place-items: center; transition: .2s ease; }
     .btn:hover { transform: translateY(-2px); background: rgba(255,255,255,.18); }
-    .play {
-      width: 72px;
-      height: 72px;
-      background: #fff;
-      color: #050505;
-      font-size: 28px;
-      box-shadow: 0 18px 42px rgba(255,255,255,.18);
-    }
-    .panel {
-      padding: 18px;
-      overflow: hidden;
-    }
-    .tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      padding: 6px;
-      border-radius: 22px;
-      background: rgba(0,0,0,.2);
-      margin-bottom: 16px;
-    }
-    .tab {
-      padding: 12px 10px;
-      border-radius: 16px;
-      background: transparent;
-      color: var(--muted);
-    }
+    .play { width: 72px; height: 72px; background: #fff; color: #050505; font-size: 28px; box-shadow: 0 18px 42px rgba(255,255,255,.18); }
+    .auto-btn.active { background: #fff; color: #050505; }
+    .panel { padding: 18px; overflow: hidden; }
+    .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 6px; border-radius: 22px; background: rgba(0,0,0,.2); margin-bottom: 16px; }
+    .tab { padding: 12px 10px; border-radius: 16px; background: transparent; color: var(--muted); }
     .tab.active { background: rgba(255,255,255,.14); color: #fff; }
     .tab-page { display: none; }
     .tab-page.active { display: block; }
-    .box {
-      border: 1px solid rgba(255,255,255,.11);
-      border-radius: 26px;
-      background: rgba(0,0,0,.17);
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-    .box h2 {
-      margin: 0 0 14px;
-      font-size: 16px;
-      letter-spacing: -.02em;
-    }
-    label {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      margin: 12px 0 7px;
-    }
-    input, textarea {
-      width: 100%;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 16px;
-      background: rgba(255,255,255,.08);
-      color: #fff;
-      padding: 12px 13px;
-      outline: none;
-      font: inherit;
-    }
-    textarea { min-height: 70px; resize: vertical; }
-    input[type="file"] { padding: 10px; color: var(--muted); }
+    .box { border: 1px solid rgba(255,255,255,.11); border-radius: 26px; background: rgba(0,0,0,.17); padding: 16px; margin-bottom: 14px; }
+    .box h2 { margin: 0 0 14px; font-size: 16px; letter-spacing: -.02em; }
+    label { display: block; color: var(--muted); font-size: 12px; margin: 12px 0 7px; }
+    input, textarea { width: 100%; border: 1px solid rgba(255,255,255,.12); border-radius: 16px; background: rgba(255,255,255,.08); color: #fff; padding: 12px 13px; outline: none; font: inherit; }
+    input::placeholder { color: rgba(255,255,255,.32); }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .main-action {
-      width: 100%;
-      margin-top: 14px;
-      border-radius: 18px;
-      padding: 13px 14px;
-      background: #fff;
-      color: #050505;
-      font-weight: 750;
-    }
-    .ghost-action {
-      width: 100%;
-      margin-top: 10px;
-      border-radius: 18px;
-      padding: 12px 14px;
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.1);
-    }
-    .playlist {
-      max-height: 420px;
-      overflow: auto;
-      padding-right: 4px;
-    }
-    .item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px;
-      border-radius: 20px;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.09);
-      margin-bottom: 10px;
-    }
+    .main-action { width: 100%; margin-top: 14px; border-radius: 18px; padding: 13px 14px; background: #fff; color: #050505; font-weight: 750; }
+    .ghost-action { width: 100%; margin-top: 10px; border-radius: 18px; padding: 12px 14px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.1); }
+    .playlist { max-height: 420px; overflow: auto; padding-right: 4px; }
+    .item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 20px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.09); margin-bottom: 10px; }
     .item.active { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.24); }
-    .thumb {
-      width: 54px;
-      height: 54px;
-      border-radius: 16px;
-      object-fit: cover;
-      background: rgba(255,255,255,.1);
-      flex: 0 0 auto;
-    }
+    .thumb { width: 54px; height: 54px; border-radius: 16px; object-fit: cover; background: rgba(255,255,255,.1); flex: 0 0 auto; }
     .meta { min-width: 0; flex: 1; }
     .meta strong, .meta span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .meta strong { font-size: 14px; }
     .meta span { color: var(--muted); font-size: 12px; margin-top: 3px; }
-    .mini {
-      width: 36px;
-      height: 36px;
-      border-radius: 13px;
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.08);
-    }
-    .hint {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-      margin: 8px 0 0;
-    }
+    .mini { width: 36px; height: 36px; border-radius: 13px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.08); }
+    .hint { color: var(--muted); font-size: 12px; line-height: 1.6; margin: 8px 0 0; }
     .danger { color: #ffb4c1; }
-    @media (max-width: 900px) {
-      .wrap { grid-template-columns: 1fr; }
-      .radio-card, .panel { min-height: auto; }
-      header { align-items: flex-start; gap: 12px; }
-      .row { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } .radio-card, .panel { min-height: auto; } header { align-items: flex-start; gap: 12px; } .row { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-  <div class="bg" id="bg"></div>
-  <div class="vignette"></div>
-  <div class="noise"></div>
+  <div class="bg"></div><div class="vignette"></div><div class="noise"></div>
 
   <main class="wrap">
     <header>
       <div class="brand">
         <img class="avatar" id="stationAvatar" alt="avatar" />
-        <div>
-          <h1 id="stationName">My FM</h1>
-          <p id="stationSubtitle">私人电台 · Personal Radio</p>
-        </div>
+        <div><h1 id="stationName">Shared FM</h1><p id="stationSubtitle">Public Radio · Everyone can edit</p></div>
       </div>
-      <div class="status">
-        <div>
-          <p>ON AIR</p>
-          <strong id="onAirText">Speaking...</strong>
-        </div>
-        <div class="live-dot"></div>
-      </div>
+      <div class="status"><div><p>ON AIR</p><strong id="onAirText">Cloud DJ</strong></div><div class="live-dot"></div></div>
     </header>
 
     <section class="radio-card">
       <div class="speaker">
-        <div class="speaker-label">Now Playing</div>
-        <div class="disc-wrap">
-          <div class="halo"></div>
-          <div class="disc" id="disc">
-            <img id="cover" alt="cover" />
-          </div>
-        </div>
-        <h2 class="track-title" id="trackTitle">No Song</h2>
-        <p class="track-artist" id="trackArtist">Add your first track</p>
-        <div class="voice-row" id="voiceInfo">🎙️ Voice intro: 未上传</div>
+        <div class="speaker-label" id="modeLabel">Cloud Radio Ready</div>
+        <div class="disc-wrap"><div class="halo"></div><div class="disc" id="disc"><img id="cover" alt="cover" /></div></div>
+        <h2 class="track-title" id="trackTitle">Loading</h2>
+        <p class="track-artist" id="trackArtist">Supabase Playlist</p>
+        <div class="voice-row" id="voiceInfo">🌐 共享歌单加载中...</div>
       </div>
-
       <div class="controls">
         <div class="progress" id="progress"><div class="bar" id="bar"></div></div>
         <div class="time"><span id="currentTime">0:00</span><span id="duration">0:00</span></div>
         <div class="buttons">
-          <button class="btn" id="prevBtn" title="Previous">⏮</button>
-          <button class="btn play" id="playBtn" title="Play / Pause">▶</button>
-          <button class="btn" id="nextBtn" title="Next">⏭</button>
-          <button class="btn" id="voiceBtn" title="Play voice intro">🎙️</button>
+          <button class="btn" id="prevBtn">⏮</button>
+          <button class="btn play" id="playBtn">▶</button>
+          <button class="btn" id="nextBtn">⏭</button>
+          <button class="btn auto-btn active" id="autoBtn">DJ</button>
+          <button class="btn" id="introBtn">🎙️</button>
         </div>
       </div>
     </section>
 
     <aside class="panel">
       <div class="tabs">
-        <button class="tab active" data-tab="songs">歌单</button>
-        <button class="tab" data-tab="station">电台设置</button>
+        <button class="tab active" data-tab="songs">共享歌单</button>
+        <button class="tab" data-tab="station">外观</button>
         <button class="tab" data-tab="help">说明</button>
       </div>
 
       <div class="tab-page active" id="songs">
         <div class="box">
-          <h2 id="songFormTitle">添加 / 编辑歌曲</h2>
-          <label>歌名</label>
-          <input id="songTitle" placeholder="例如：Yellow" />
-          <label>歌手名</label>
-          <input id="songArtist" placeholder="例如：Coldplay" />
-          <label>音频链接 MP3 URL（推荐）</label>
-          <input id="songUrl" placeholder="https://.../song.mp3" />
-          <label>或者上传本地音乐文件</label>
-          <input id="songFile" type="file" accept="audio/*" />
-          <label>封面图片链接</label>
-          <input id="coverUrl" placeholder="https://.../cover.jpg" />
-          <label>或者上传封面图片</label>
-          <input id="coverFile" type="file" accept="image/*" />
-          <button class="main-action" id="saveSongBtn">保存歌曲</button>
+          <h2 id="songFormTitle">添加 / 编辑共享歌曲</h2>
+          <label>歌名</label><input id="songTitle" placeholder="例如：Yellow" />
+          <label>歌手名</label><input id="songArtist" placeholder="例如：Coldplay" />
+          <label>音乐 MP3 URL</label><input id="songUrl" placeholder="https://.../song.mp3" />
+          <label>封面图片 URL</label><input id="coverUrl" placeholder="https://.../cover.jpg" />
+          <label>这首歌的 DJ 语音标题</label><input id="voiceName" placeholder="例如：Intro for Yellow" />
+          <label>这首歌的 DJ 语音 URL</label><input id="voiceUrl" placeholder="https://.../voice.mp3" />
+          <div class="row">
+            <div><label>歌曲淡入秒数</label><input id="fadeIn" type="number" min="0" step="0.5" placeholder="3" /></div>
+            <div><label>语音结束前几秒进歌</label><input id="crossfade" type="number" min="0" step="0.5" placeholder="3" /></div>
+          </div>
+          <button class="main-action" id="saveSongBtn">保存到共享电台</button>
           <button class="ghost-action" id="cancelEditBtn">取消编辑</button>
         </div>
-        <div class="box">
-          <h2>当前歌单</h2>
-          <div class="playlist" id="playlist"></div>
-        </div>
+        <div class="box"><h2>云端共享歌单</h2><div class="playlist" id="playlist"></div></div>
       </div>
 
       <div class="tab-page" id="station">
         <div class="box">
-          <h2>电台外观</h2>
-          <label>电台名字</label>
-          <input id="stationNameInput" placeholder="My FM" />
-          <label>副标题</label>
-          <input id="stationSubtitleInput" placeholder="私人电台 · Personal Radio" />
-          <label>右上角状态文字</label>
-          <input id="onAirInput" placeholder="Speaking..." />
-          <label>头像 URL</label>
-          <input id="avatarUrl" placeholder="https://.../avatar.jpg" />
-          <label>或者上传头像</label>
-          <input id="avatarFile" type="file" accept="image/*" />
-          <label>背景图片 URL</label>
-          <input id="bgUrl" placeholder="https://.../background.jpg" />
-          <label>或者上传背景图</label>
-          <input id="bgFile" type="file" accept="image/*" />
-          <button class="main-action" id="saveStationBtn">保存电台设置</button>
-        </div>
-
-        <div class="box">
-          <h2>上传语音</h2>
-          <label>语音标题</label>
-          <input id="voiceName" placeholder="Opening Voice / DJ Intro" />
-          <label>语音 URL</label>
-          <input id="voiceUrl" placeholder="https://.../voice.mp3" />
-          <label>或者上传本地语音</label>
-          <input id="voiceFile" type="file" accept="audio/*" />
-          <button class="main-action" id="saveVoiceBtn">保存语音</button>
-          <button class="ghost-action" id="playVoiceOnlyBtn">试听语音</button>
+          <h2>本机外观设置</h2>
+          <p class="hint">这部分只影响你当前浏览器，不会影响别人。共享的是歌曲数据。</p>
+          <label>电台名字</label><input id="stationNameInput" placeholder="Shared FM" />
+          <label>副标题</label><input id="stationSubtitleInput" placeholder="Public Radio · Everyone can edit" />
+          <label>右上角状态文字</label><input id="onAirInput" placeholder="Cloud DJ" />
+          <label>头像 URL</label><input id="avatarUrl" placeholder="https://.../avatar.jpg" />
+          <label>背景图片 URL</label><input id="bgUrl" placeholder="https://.../background.jpg" />
+          <button class="main-action" id="saveStationBtn">保存本机外观</button>
         </div>
       </div>
 
       <div class="tab-page" id="help">
         <div class="box">
-          <h2>怎么用</h2>
-          <p class="hint">1. 可以直接填 MP3 外链，也可以上传本地音乐文件。</p>
-          <p class="hint">2. 背景、封面、头像、语音都可以上传或填 URL。</p>
-          <p class="hint">3. 数据会保存在当前浏览器里，不需要数据库。</p>
-          <p class="hint danger">注意：如果你换电脑/换浏览器，本地上传的文件不会自动同步。正式网站建议以后接 Supabase 或 Cloudflare R2。</p>
-          <button class="ghost-action" id="exportBtn">导出歌单 JSON</button>
-          <button class="ghost-action danger" id="resetBtn">清空所有数据</button>
+          <h2>共享电台说明</h2>
+          <p class="hint">现在歌曲数据保存在 Supabase 云端。任何人打开这个网站，都能看到同一份歌单。</p>
+          <p class="hint">任何人都可以添加、编辑、删除歌曲。以后如果想保护歌单，可以加管理员登录。</p>
+          <p class="hint danger">重要：这个版本使用 URL。音乐、封面、语音都需要填写可公开访问的链接。</p>
+          <button class="ghost-action" id="refreshBtn">刷新共享歌单</button>
         </div>
       </div>
     </aside>
@@ -510,287 +212,248 @@
   <audio id="audio"></audio>
   <audio id="voiceAudio"></audio>
 
-  <script>
-    const DB_NAME = "my-fm-radio-db";
-    const STORE = "files";
-    let db;
-    let tracks = [];
-    let settings = {};
-    let currentIndex = 0;
-    let editingId = null;
-    let isPlaying = false;
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const SUPABASE_URL = "https://blipimpqjsqezrtjmkdi.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_-F1yiDRdbY8Iw26a6rvIUA_zPEI-b4X";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let tracks = [], settings = {}, currentIndex = 0, editingId = null;
+    let isPlaying = false, autoDJ = true, phase = "idle", fadeTimer = null, introStartedMusic = false;
 
     const defaultCover = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800' viewBox='0 0 800 800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%2327252a'/%3E%3Cstop offset='1' stop-color='%2308090d'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='800' height='800' fill='url(%23g)'/%3E%3Ccircle cx='400' cy='400' r='260' fill='none' stroke='rgba(255,255,255,.18)' stroke-width='3'/%3E%3Ccircle cx='400' cy='400' r='90' fill='rgba(255,255,255,.1)'/%3E%3Ctext x='400' y='418' font-family='Arial' font-size='48' fill='white' text-anchor='middle'%3EFM%3C/text%3E%3C/svg%3E";
-    const defaultAvatar = defaultCover;
+    const $ = id => document.getElementById(id);
+    const fmt = sec => !isFinite(sec) ? "0:00" : `${Math.floor(sec/60)}:${Math.floor(sec%60).toString().padStart(2,"0")}`;
+    const escapeHtml = str => String(str || "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#039;","\"":"&quot;"}[c]));
 
-    const $ = (id) => document.getElementById(id);
-
-    function openDB() {
-      return new Promise((resolve, reject) => {
-        const req = indexedDB.open(DB_NAME, 1);
-        req.onupgradeneeded = () => req.result.createObjectStore(STORE);
-        req.onsuccess = () => { db = req.result; resolve(db); };
-        req.onerror = () => reject(req.error);
-      });
+    function loadLocalSettings() {
+      settings = JSON.parse(localStorage.getItem("shared-fm-local-settings") || "{}");
+      autoDJ = localStorage.getItem("shared-fm-autodj") !== "false";
     }
-    function putFile(key, file) {
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(STORE, "readwrite");
-        tx.objectStore(STORE).put(file, key);
-        tx.oncomplete = () => resolve(key);
-        tx.onerror = () => reject(tx.error);
-      });
+    function saveLocalSettings() {
+      localStorage.setItem("shared-fm-local-settings", JSON.stringify(settings));
+      localStorage.setItem("shared-fm-autodj", String(autoDJ));
     }
-    function getFileURL(key) {
-      return new Promise((resolve) => {
-        if (!key) return resolve("");
-        const tx = db.transaction(STORE, "readonly");
-        const req = tx.objectStore(STORE).get(key);
-        req.onsuccess = () => resolve(req.result ? URL.createObjectURL(req.result) : "");
-        req.onerror = () => resolve("");
-      });
-    }
-    async function sourceURL(obj, urlKey, fileKey) {
-      if (obj[fileKey]) return await getFileURL(obj[fileKey]);
-      return obj[urlKey] || "";
-    }
-    function saveState() {
-      localStorage.setItem("my-fm-tracks", JSON.stringify(tracks));
-      localStorage.setItem("my-fm-settings", JSON.stringify(settings));
-      localStorage.setItem("my-fm-current", String(currentIndex));
-    }
-    function loadState() {
-      tracks = JSON.parse(localStorage.getItem("my-fm-tracks") || "[]");
-      settings = JSON.parse(localStorage.getItem("my-fm-settings") || "{}");
-      currentIndex = Number(localStorage.getItem("my-fm-current") || 0);
-      if (!tracks.length) {
-        tracks = [{
-          id: crypto.randomUUID(),
-          title: "Test Song",
-          artist: "My FM",
-          audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-          coverUrl: defaultCover
-        }];
+    async function loadSongs() {
+      const { data, error } = await supabase.from("songs").select("*").order("created_at", { ascending: true });
+      if (error) {
+        console.error(error);
+        alert("读取 Supabase 歌单失败：" + error.message);
+        return;
       }
-    }
-    function fmt(sec) {
-      if (!isFinite(sec)) return "0:00";
-      const m = Math.floor(sec / 60);
-      const s = Math.floor(sec % 60).toString().padStart(2, "0");
-      return `${m}:${s}`;
-    }
-    async function renderStation() {
-      $("stationName").textContent = settings.name || "My FM";
-      $("stationSubtitle").textContent = settings.subtitle || "私人电台 · Personal Radio";
-      $("onAirText").textContent = settings.onAir || "Speaking...";
-      $("stationNameInput").value = settings.name || "My FM";
-      $("stationSubtitleInput").value = settings.subtitle || "私人电台 · Personal Radio";
-      $("onAirInput").value = settings.onAir || "Speaking...";
-      $("avatarUrl").value = settings.avatarUrl || "";
-      $("bgUrl").value = settings.bgUrl || "";
-      $("voiceName").value = settings.voiceName || "";
-      $("voiceUrl").value = settings.voiceUrl || "";
-      const avatar = await sourceURL(settings, "avatarUrl", "avatarFileKey") || defaultAvatar;
-      const bg = await sourceURL(settings, "bgUrl", "bgFileKey") || "";
-      $("stationAvatar").src = avatar;
-      document.documentElement.style.setProperty("--page-bg", bg ? `url('${bg}')` : "radial-gradient(circle at 50% 20%, #292524, #08090d 58%)");
-      $("voiceInfo").textContent = settings.voiceName || settings.voiceUrl || settings.voiceFileKey ? `🎙️ Voice intro: ${settings.voiceName || "Uploaded"}` : "🎙️ Voice intro: 未上传";
-    }
-    async function renderPlayer() {
+      tracks = data || [];
       if (currentIndex >= tracks.length) currentIndex = 0;
-      const track = tracks[currentIndex];
-      const cover = await sourceURL(track, "coverUrl", "coverFileKey") || defaultCover;
-      const audioSrc = await sourceURL(track, "audioUrl", "audioFileKey");
-      $("cover").src = cover;
-      $("trackTitle").textContent = track?.title || "No Song";
-      $("trackArtist").textContent = track?.artist || "Add your first track";
-      $("disc").classList.toggle("playing", isPlaying);
-      const audio = $("audio");
-      if (audio.src !== audioSrc) audio.src = audioSrc;
-      renderPlaylist();
-      saveState();
+      await renderPlayer();
     }
-    function renderPlaylist() {
-      const box = $("playlist");
-      box.innerHTML = "";
-      tracks.forEach((t, i) => {
-        const item = document.createElement("div");
-        item.className = "item" + (i === currentIndex ? " active" : "");
-        item.innerHTML = `
-          <img class="thumb" src="${t.coverUrl || defaultCover}" alt="cover">
-          <div class="meta"><strong>${escapeHtml(t.title || "Untitled")}</strong><span>${escapeHtml(t.artist || "Unknown Artist")}</span></div>
-          <button class="mini" title="播放">▶</button>
-          <button class="mini" title="编辑">✎</button>
-          <button class="mini" title="删除">×</button>
-        `;
-        item.children[2].onclick = async () => { currentIndex = i; isPlaying = true; await renderPlayer(); $("audio").play(); updatePlayButton(); };
-        item.children[3].onclick = () => startEdit(t);
-        item.children[4].onclick = () => deleteSong(t.id);
-        sourceURL(t, "coverUrl", "coverFileKey").then(url => { item.querySelector("img").src = url || defaultCover; });
-        box.appendChild(item);
-      });
+    function mapTrack(row) {
+      return {
+        title: $("songTitle").value.trim(),
+        artist: $("songArtist").value.trim() || "Unknown Artist",
+        audio_url: $("songUrl").value.trim(),
+        cover_url: $("coverUrl").value.trim() || null,
+        voice_title: $("voiceName").value.trim() || null,
+        voice_url: $("voiceUrl").value.trim() || null,
+        fade_in: Number($("fadeIn").value || 3),
+        crossfade: Number($("crossfade").value || 3)
+      };
     }
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#039;","\"":"&quot;"}[c]));
+    async function saveSong() {
+      const row = mapTrack();
+      if (!row.title) return alert("请填写歌名");
+      if (!row.audio_url) return alert("请填写音乐 MP3 URL");
+
+      let result;
+      if (editingId) {
+        result = await supabase.from("songs").update(row).eq("id", editingId);
+      } else {
+        result = await supabase.from("songs").insert(row);
+      }
+      if (result.error) return alert("保存失败：" + result.error.message);
+      clearSongForm();
+      await loadSongs();
     }
-    function updatePlayButton() {
-      $("playBtn").textContent = isPlaying ? "Ⅱ" : "▶";
-      $("disc").classList.toggle("playing", isPlaying);
+    async function deleteSong(id) {
+      if (!confirm("确定删除这首共享歌曲吗？所有人都会看不到它。")) return;
+      const { error } = await supabase.from("songs").delete().eq("id", id);
+      if (error) return alert("删除失败：" + error.message);
+      currentIndex = 0;
+      await loadSongs();
+    }
+    function startEdit(t) {
+      editingId = t.id;
+      $("songFormTitle").textContent = "正在编辑共享歌曲";
+      $("songTitle").value = t.title || "";
+      $("songArtist").value = t.artist || "";
+      $("songUrl").value = t.audio_url || "";
+      $("coverUrl").value = t.cover_url || "";
+      $("voiceName").value = t.voice_title || "";
+      $("voiceUrl").value = t.voice_url || "";
+      $("fadeIn").value = t.fade_in || 3;
+      $("crossfade").value = t.crossfade || 3;
+      activateTab("songs");
     }
     function clearSongForm() {
       editingId = null;
-      $("songFormTitle").textContent = "添加 / 编辑歌曲";
-      ["songTitle","songArtist","songUrl","coverUrl","songFile","coverFile"].forEach(id => $(id).value = "");
+      $("songFormTitle").textContent = "添加 / 编辑共享歌曲";
+      ["songTitle","songArtist","songUrl","coverUrl","voiceName","voiceUrl","fadeIn","crossfade"].forEach(id => $(id).value = "");
     }
-    function startEdit(track) {
-      editingId = track.id;
-      $("songFormTitle").textContent = "正在编辑歌曲";
-      $("songTitle").value = track.title || "";
-      $("songArtist").value = track.artist || "";
-      $("songUrl").value = track.audioUrl || "";
-      $("coverUrl").value = track.coverUrl || "";
-      activateTab("songs");
+    function renderStation() {
+      $("stationName").textContent = settings.name || "Shared FM";
+      $("stationSubtitle").textContent = settings.subtitle || "Public Radio · Everyone can edit";
+      $("onAirText").textContent = settings.onAir || "Cloud DJ";
+      $("stationNameInput").value = settings.name || "Shared FM";
+      $("stationSubtitleInput").value = settings.subtitle || "Public Radio · Everyone can edit";
+      $("onAirInput").value = settings.onAir || "Cloud DJ";
+      $("avatarUrl").value = settings.avatarUrl || "";
+      $("bgUrl").value = settings.bgUrl || "";
+      $("stationAvatar").src = settings.avatarUrl || defaultCover;
+      document.documentElement.style.setProperty("--page-bg", settings.bgUrl ? `url('${settings.bgUrl}')` : "radial-gradient(circle at 50% 20%, #292524, #08090d 58%)");
     }
-    async function saveSong() {
-      const title = $("songTitle").value.trim();
-      const artist = $("songArtist").value.trim();
-      const audioUrl = $("songUrl").value.trim();
-      const coverUrl = $("coverUrl").value.trim();
-      const songFile = $("songFile").files[0];
-      const coverFile = $("coverFile").files[0];
-      if (!title) return alert("请填写歌名");
-      if (!audioUrl && !songFile && !editingId) return alert("请填写 MP3 链接或上传音乐文件");
-      let track = editingId ? tracks.find(t => t.id === editingId) : { id: crypto.randomUUID() };
-      track.title = title;
-      track.artist = artist || "Unknown Artist";
-      track.audioUrl = audioUrl;
-      track.coverUrl = coverUrl;
-      if (songFile) {
-        track.audioFileKey = `song-${track.id}-${Date.now()}`;
-        await putFile(track.audioFileKey, songFile);
-      }
-      if (coverFile) {
-        track.coverFileKey = `cover-${track.id}-${Date.now()}`;
-        await putFile(track.coverFileKey, coverFile);
-      }
-      if (!editingId) {
-        tracks.unshift(track);
-        currentIndex = 0;
-      }
-      clearSongForm();
-      await renderPlayer();
-    }
-    async function deleteSong(id) {
-      if (!confirm("确定删除这首歌吗？")) return;
-      tracks = tracks.filter(t => t.id !== id);
-      currentIndex = 0;
-      if (!tracks.length) isPlaying = false;
-      await renderPlayer();
-      updatePlayButton();
-    }
-    async function saveStation() {
-      settings.name = $("stationNameInput").value.trim() || "My FM";
-      settings.subtitle = $("stationSubtitleInput").value.trim() || "私人电台 · Personal Radio";
-      settings.onAir = $("onAirInput").value.trim() || "Speaking...";
+    function saveStation() {
+      settings.name = $("stationNameInput").value.trim() || "Shared FM";
+      settings.subtitle = $("stationSubtitleInput").value.trim() || "Public Radio · Everyone can edit";
+      settings.onAir = $("onAirInput").value.trim() || "Cloud DJ";
       settings.avatarUrl = $("avatarUrl").value.trim();
       settings.bgUrl = $("bgUrl").value.trim();
-      const avatarFile = $("avatarFile").files[0];
-      const bgFile = $("bgFile").files[0];
-      if (avatarFile) { settings.avatarFileKey = `avatar-${Date.now()}`; await putFile(settings.avatarFileKey, avatarFile); }
-      if (bgFile) { settings.bgFileKey = `bg-${Date.now()}`; await putFile(settings.bgFileKey, bgFile); }
-      saveState();
-      await renderStation();
-      alert("电台设置已保存");
+      saveLocalSettings();
+      renderStation();
+      alert("本机外观已保存");
     }
-    async function saveVoice() {
-      settings.voiceName = $("voiceName").value.trim() || "Voice Intro";
-      settings.voiceUrl = $("voiceUrl").value.trim();
-      const file = $("voiceFile").files[0];
-      if (file) { settings.voiceFileKey = `voice-${Date.now()}`; await putFile(settings.voiceFileKey, file); }
-      if (!settings.voiceUrl && !settings.voiceFileKey) return alert("请上传语音或填写语音 URL");
-      saveState();
-      await renderStation();
-      alert("语音已保存");
+    function renderPlayer() {
+      if (!tracks.length) {
+        $("trackTitle").textContent = "No Songs";
+        $("trackArtist").textContent = "Add a shared song";
+        $("cover").src = defaultCover;
+        $("voiceInfo").textContent = "🌐 共享歌单为空，添加第一首歌吧";
+        renderPlaylist();
+        return;
+      }
+      const track = tracks[currentIndex];
+      $("cover").src = track.cover_url || defaultCover;
+      $("trackTitle").textContent = track.title || "No Song";
+      $("trackArtist").textContent = track.artist || "Unknown Artist";
+      $("voiceInfo").textContent = track.voice_url ? `🎙️ ${track.voice_title || "This song has DJ intro"}` : "🎙️ 这首歌没有语音，会直接播放歌曲";
+      $("modeLabel").textContent = phase === "intro" ? "DJ Intro" : phase === "music" ? "Now Playing" : "Cloud Radio Ready";
+      $("disc").classList.toggle("playing", isPlaying && phase === "music");
+      $("autoBtn").classList.toggle("active", autoDJ);
+      renderPlaylist();
+      saveLocalSettings();
     }
-    async function playVoice() {
-      const src = await sourceURL(settings, "voiceUrl", "voiceFileKey");
-      if (!src) return alert("还没有上传语音");
-      const v = $("voiceAudio");
-      v.src = src;
-      v.play();
+    function renderPlaylist() {
+      const box = $("playlist"); box.innerHTML = "";
+      tracks.forEach((t, i) => {
+        const item = document.createElement("div");
+        item.className = "item" + (i === currentIndex ? " active" : "");
+        item.innerHTML = `<img class="thumb" src="${escapeHtml(t.cover_url || defaultCover)}" alt="cover"><div class="meta"><strong>${escapeHtml(t.title)}</strong><span>${escapeHtml(t.artist)} · ${t.voice_url ? "有语音" : "无语音"}</span></div><button class="mini" title="从语音开始播放">▶</button><button class="mini" title="编辑">✎</button><button class="mini" title="删除">×</button>`;
+        item.children[2].onclick = async () => { currentIndex = i; await startTrackWithIntro(); };
+        item.children[3].onclick = () => startEdit(t);
+        item.children[4].onclick = () => deleteSong(t.id);
+        box.appendChild(item);
+      });
     }
-    function activateTab(name) {
-      document.querySelectorAll(".tab").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
-      document.querySelectorAll(".tab-page").forEach(p => p.classList.toggle("active", p.id === name));
+    function updatePlayButton() { $("playBtn").textContent = isPlaying ? "Ⅱ" : "▶"; $("disc").classList.toggle("playing", isPlaying && phase === "music"); }
+    function stopAll() {
+      clearInterval(fadeTimer); fadeTimer = null; introStartedMusic = false;
+      $("audio").pause(); $("voiceAudio").pause(); isPlaying = false; phase = "idle"; updatePlayButton(); renderPlayer();
+    }
+    async function prepareMusic(track, volume = 1) {
+      const music = $("audio");
+      if (!track.audio_url) { alert("这首歌没有音频 URL"); return false; }
+      music.src = track.audio_url; music.volume = volume; music.currentTime = 0; return true;
+    }
+    async function startTrackWithIntro() {
+      if (!tracks.length) return;
+      clearInterval(fadeTimer); introStartedMusic = false;
+      const track = tracks[currentIndex];
+      const hasMusic = await prepareMusic(track, track.voice_url ? 0 : 1);
+      if (!hasMusic) return;
+      isPlaying = true; updatePlayButton();
+      if (track.voice_url) {
+        phase = "intro"; renderPlayer();
+        const voice = $("voiceAudio"); voice.src = track.voice_url; voice.volume = 1; voice.currentTime = 0;
+        await voice.play();
+      } else {
+        phase = "music"; renderPlayer();
+        await $("audio").play();
+      }
+    }
+    async function startMusicFadeIn(track) {
+      if (introStartedMusic) return; introStartedMusic = true;
+      const music = $("audio"), voice = $("voiceAudio");
+      phase = "music"; renderPlayer();
+      music.volume = 0; music.currentTime = 0; await music.play();
+      const fadeSec = Number(track.fade_in || 3);
+      const steps = Math.max(10, Math.round(fadeSec * 10));
+      let n = 0;
+      clearInterval(fadeTimer);
+      fadeTimer = setInterval(() => {
+        n++;
+        music.volume = Math.min(1, n / steps);
+        voice.volume = Math.max(0, 1 - n / steps);
+        if (n >= steps) { clearInterval(fadeTimer); voice.pause(); voice.currentTime = 0; music.volume = 1; }
+      }, 100);
     }
     async function playPause() {
-      const audio = $("audio");
-      if (!audio.src) await renderPlayer();
-      if (isPlaying) {
-        audio.pause();
-        isPlaying = false;
-      } else {
-        await audio.play();
-        isPlaying = true;
-      }
-      updatePlayButton();
+      if (!tracks.length) return alert("共享歌单为空，先添加一首歌");
+      if (!isPlaying) { await startTrackWithIntro(); return; }
+      $("audio").pause(); $("voiceAudio").pause(); isPlaying = false; updatePlayButton();
     }
-    async function next() {
+    async function next(auto = false) {
       if (!tracks.length) return;
       currentIndex = (currentIndex + 1) % tracks.length;
-      await renderPlayer();
-      if (isPlaying) $("audio").play();
+      if (auto || autoDJ) await startTrackWithIntro(); else { stopAll(); renderPlayer(); }
     }
     async function prev() {
       if (!tracks.length) return;
       currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
-      await renderPlayer();
-      if (isPlaying) $("audio").play();
+      await startTrackWithIntro();
+    }
+    async function playCurrentIntroOnly() {
+      const track = tracks[currentIndex];
+      if (!track?.voice_url) return alert("这首歌没有设置语音 URL");
+      const v = $("voiceAudio"); v.src = track.voice_url; v.volume = 1; await v.play();
+    }
+    function activateTab(name) {
+      document.querySelectorAll(".tab").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
+      document.querySelectorAll(".tab-page").forEach(p => p.classList.toggle("active", p.id === name));
     }
     function bindEvents() {
       document.querySelectorAll(".tab").forEach(btn => btn.onclick = () => activateTab(btn.dataset.tab));
       $("saveSongBtn").onclick = saveSong;
       $("cancelEditBtn").onclick = clearSongForm;
       $("saveStationBtn").onclick = saveStation;
-      $("saveVoiceBtn").onclick = saveVoice;
-      $("playVoiceOnlyBtn").onclick = playVoice;
-      $("voiceBtn").onclick = playVoice;
+      $("refreshBtn").onclick = loadSongs;
       $("playBtn").onclick = playPause;
-      $("nextBtn").onclick = next;
+      $("nextBtn").onclick = () => next(true);
       $("prevBtn").onclick = prev;
+      $("introBtn").onclick = playCurrentIntroOnly;
+      $("autoBtn").onclick = () => { autoDJ = !autoDJ; saveLocalSettings(); renderPlayer(); };
+      $("voiceAudio").ontimeupdate = async () => {
+        const v = $("voiceAudio"), track = tracks[currentIndex];
+        if (!v.duration || introStartedMusic) return;
+        const remaining = v.duration - v.currentTime;
+        if (remaining <= Number(track.crossfade || 3)) await startMusicFadeIn(track);
+      };
+      $("voiceAudio").onended = async () => { if (!introStartedMusic && isPlaying) await startMusicFadeIn(tracks[currentIndex]); };
       $("audio").ontimeupdate = () => {
-        const a = $("audio");
-        const pct = a.duration ? (a.currentTime / a.duration) * 100 : 0;
-        $("bar").style.width = pct + "%";
-        $("currentTime").textContent = fmt(a.currentTime);
-        $("duration").textContent = fmt(a.duration);
+        const a = $("audio"); const pct = a.duration ? (a.currentTime / a.duration) * 100 : 0;
+        $("bar").style.width = pct + "%"; $("currentTime").textContent = fmt(a.currentTime); $("duration").textContent = fmt(a.duration);
       };
-      $("audio").onended = next;
-      $("progress").onclick = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const pct = (e.clientX - rect.left) / rect.width;
-        if ($("audio").duration) $("audio").currentTime = pct * $("audio").duration;
-      };
-      $("exportBtn").onclick = () => {
-        const data = JSON.stringify({ settings, tracks }, null, 2);
-        const blob = new Blob([data], { type: "application/json" });
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "my-fm-playlist.json";
-        a.click();
-      };
-      $("resetBtn").onclick = () => {
-        if (!confirm("确定清空所有设置和歌单吗？")) return;
-        localStorage.clear();
-        location.reload();
-      };
+      $("audio").onended = () => { if (autoDJ && isPlaying) next(true); else { isPlaying = false; phase = "idle"; updatePlayButton(); renderPlayer(); } };
+      $("progress").onclick = e => { const rect = e.currentTarget.getBoundingClientRect(); const pct = (e.clientX - rect.left) / rect.width; if ($("audio").duration) $("audio").currentTime = pct * $("audio").duration; };
+    }
+    function subscribeRealtime() {
+      supabase.channel("songs-changes")
+        .on("postgres_changes", { event: "*", schema: "public", table: "songs" }, () => loadSongs())
+        .subscribe();
     }
     async function init() {
-      await openDB();
-      loadState();
+      loadLocalSettings();
       bindEvents();
-      await renderStation();
-      await renderPlayer();
+      renderStation();
+      await loadSongs();
+      subscribeRealtime();
       updatePlayButton();
     }
     init();
